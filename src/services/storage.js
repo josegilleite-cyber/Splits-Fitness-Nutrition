@@ -5,7 +5,8 @@ const KEYS = {
   TEMPLATES: '@workout_templates',
   NUTRITION: '@nutrition_data',
   PROGRESS: '@progress_data',
-  SETTINGS: '@settings'
+  SETTINGS: '@settings',
+  TEMPLATES_INITIALIZED: '@templates_initialized'
 };
 
 export const StorageService = {
@@ -95,7 +96,12 @@ export const StorageService = {
     try {
       const newTemplates = JSON.parse(templatesJson);
       const existingTemplates = await this.getTemplates();
-      const merged = [...existingTemplates, ...newTemplates];
+      
+      // Filter out duplicates based on template ID
+      const existingIds = new Set(existingTemplates.map(t => t.id));
+      const uniqueNewTemplates = newTemplates.filter(t => !existingIds.has(t.id));
+      
+      const merged = [...existingTemplates, ...uniqueNewTemplates];
       await AsyncStorage.setItem(KEYS.TEMPLATES, JSON.stringify(merged));
       return merged;
     } catch (error) {
@@ -111,6 +117,24 @@ export const StorageService = {
     } catch (error) {
       console.error('Error exporting templates:', error);
       throw error;
+    }
+  },
+
+  // Check if default templates have been initialized
+  async hasInitializedTemplates() {
+    try {
+      const value = await AsyncStorage.getItem(KEYS.TEMPLATES_INITIALIZED);
+      return value === 'true';
+    } catch (error) {
+      return false;
+    }
+  },
+
+  async setTemplatesInitialized() {
+    try {
+      await AsyncStorage.setItem(KEYS.TEMPLATES_INITIALIZED, 'true');
+    } catch (error) {
+      console.error('Error setting templates initialized flag:', error);
     }
   },
 
