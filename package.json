@@ -1,0 +1,32 @@
+{
+  "name": "splits-fitness-nutrition",
+  "version": "1.0.0",
+  "description": "🏋️ Splits Fitness &amp; Nutrition - React Native workout tracker with privacy by design. Track exercises, sets, reps, progressive overload. Features: hypertrophy workout templates, exercise video tutorials, workout history, volume calculations. 100% local storage, zero data collection. Built with Expo, ready for App Store.",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-navigation/bottom-tabs": "^7.10.0",
+    "@react-navigation/native": "^7.1.28",
+    "@react-navigation/native-stack": "^7.10.0",
+    "babel-preset-expo": "^54.0.9",
+    "expo": "~52.0.0",
+    "expo-clipboard": "^8.0.8",
+    "expo-notifications": "^0.32.16",
+    "react": "^18.3.1",
+    "react-native": "^0.76.5",
+    "react-native-chart-kit": "^6.12.0",
+    "react-native-safe-area-context": "^5.6.2",
+    "react-native-screens": "^4.19.0",
+    "react-native-svg": "^15.15.1"
+  }
+}
