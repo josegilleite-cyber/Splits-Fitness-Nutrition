@@ -8,9 +8,11 @@ import {
   Animated
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../context/ThemeContext';
 import { scheduleRestTimerNotification, cancelAllNotifications } from '../utils/notifications';
 
 export default function RestTimer({ visible, onClose }) {
+  const { theme } = useTheme();
   const [timeLeft, setTimeLeft] = useState(90); // Default 90 seconds
   const [isRunning, setIsRunning] = useState(false);
   const [selectedTime, setSelectedTime] = useState(90);
@@ -98,6 +100,8 @@ export default function RestTimer({ visible, onClose }) {
     { label: '180s', value: 180 }
   ];
 
+  const styles = createStyles(theme);
+
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
@@ -105,7 +109,7 @@ export default function RestTimer({ visible, onClose }) {
           <View style={styles.header}>
             <Text style={styles.title}>Rest Timer</Text>
             <TouchableOpacity onPress={handleClose}>
-              <Ionicons name="close" size={32} color="#333" />
+              <Ionicons name="close" size={28} color={theme.colors.text} />
             </TouchableOpacity>
           </View>
 
@@ -182,16 +186,16 @@ export default function RestTimer({ visible, onClose }) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'flex-end',
   },
   container: {
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    backgroundColor: theme.colors.card,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     padding: 24,
     minHeight: 400,
   },
@@ -204,6 +208,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: theme.colors.text,
   },
   timerContainer: {
     alignItems: 'center',
@@ -212,25 +217,25 @@ const styles = StyleSheet.create({
   timer: {
     fontSize: 72,
     fontWeight: 'bold',
-    color: '#2196F3',
+    color: theme.colors.primary,
     marginBottom: 16,
   },
   timerWarning: {
-    color: '#f44336',
+    color: theme.colors.danger,
   },
   progressBarContainer: {
     width: '100%',
     height: 8,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: theme.colors.inputBackground,
     borderRadius: 4,
     overflow: 'hidden',
   },
   progressBar: {
     height: '100%',
-    backgroundColor: '#2196F3',
+    backgroundColor: theme.colors.primary,
   },
   progressBarWarning: {
-    backgroundColor: '#f44336',
+    backgroundColor: theme.colors.danger,
   },
   presetsContainer: {
     flexDirection: 'row',
@@ -241,35 +246,35 @@ const styles = StyleSheet.create({
   presetButton: {
     flex: 1,
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#e0e0e0',
+    borderColor: theme.colors.border,
     alignItems: 'center',
   },
   presetButtonActive: {
-    borderColor: '#2196F3',
-    backgroundColor: '#E3F2FD',
+    borderColor: theme.colors.primary,
+    backgroundColor: theme.dark ? 'rgba(93, 173, 226, 0.1)' : '#E3F2FD',
   },
   presetText: {
     fontSize: 16,
-    color: '#666',
-    fontWeight: '500',
+    color: theme.colors.textSecondary,
+    fontWeight: '600',
   },
   presetTextActive: {
-    color: '#2196F3',
+    color: theme.colors.primary,
     fontWeight: 'bold',
   },
   controls: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 16,
+    gap: 12,
   },
   startButton: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.success,
     padding: 16,
     borderRadius: 12,
     gap: 8,
@@ -279,7 +284,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FF9800',
+    backgroundColor: theme.colors.warning,
     padding: 16,
     borderRadius: 12,
     gap: 8,
@@ -291,16 +296,16 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#2196F3',
+    borderColor: theme.colors.primary,
     gap: 8,
   },
   controlText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 'bold',
   },
   resetText: {
-    color: '#2196F3',
+    color: theme.colors.primary,
   },
   completeContainer: {
     alignItems: 'center',
@@ -310,12 +315,12 @@ const styles = StyleSheet.create({
   completeText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#4CAF50',
+    color: theme.colors.success,
     marginTop: 12,
   },
   completeSubtext: {
     fontSize: 16,
-    color: '#666',
+    color: theme.colors.textSecondary,
     marginTop: 4,
   },
 });

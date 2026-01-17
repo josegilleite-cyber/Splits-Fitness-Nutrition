@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import { StorageService } from '../services/storage';
 import { exercises } from '../data/exercises';
+import { workoutTemplates } from '../data/workoutTemplates';
 import { generateId } from '../utils/helpers';
 
 export default function TemplatesScreen() {
@@ -45,44 +46,18 @@ export default function TemplatesScreen() {
 
     const existing = await StorageService.getTemplates();
     if (existing.length === 0) {
-      // Add some default templates
-      const defaultTemplates = [
-        {
+      // Use the professional workout templates
+      const defaultTemplates = workoutTemplates
+        .filter(template => !template.isPremium) // Only free templates initially
+        .slice(0, 5) // Get first 5 free templates
+        .map(template => ({
           id: generateId(),
-          name: 'Push Day',
-          description: 'Chest, shoulders, and triceps workout',
-          exercises: [
-            { exerciseId: 'bench-press', sets: 4, reps: 8 },
-            { exerciseId: 'overhead-press', sets: 3, reps: 10 },
-            { exerciseId: 'incline-bench-press', sets: 3, reps: 10 },
-            { exerciseId: 'lateral-raises', sets: 3, reps: 12 },
-            { exerciseId: 'tricep-pushdown', sets: 3, reps: 12 }
-          ]
-        },
-        {
-          id: generateId(),
-          name: 'Pull Day',
-          description: 'Back and biceps workout',
-          exercises: [
-            { exerciseId: 'deadlift', sets: 4, reps: 6 },
-            { exerciseId: 'pull-ups', sets: 3, reps: 10 },
-            { exerciseId: 'barbell-row', sets: 4, reps: 8 },
-            { exerciseId: 'bicep-curls', sets: 3, reps: 12 }
-          ]
-        },
-        {
-          id: generateId(),
-          name: 'Leg Day',
-          description: 'Lower body workout',
-          exercises: [
-            { exerciseId: 'squat', sets: 4, reps: 8 },
-            { exerciseId: 'leg-press', sets: 3, reps: 12 },
-            { exerciseId: 'leg-curl', sets: 3, reps: 12 },
-            { exerciseId: 'leg-extension', sets: 3, reps: 12 },
-            { exerciseId: 'calf-raises', sets: 4, reps: 15 }
-          ]
-        }
-      ];
+          name: template.name,
+          description: template.description,
+          difficulty: template.difficulty,
+          duration: template.duration,
+          exercises: template.exercises
+        }));
 
       for (const template of defaultTemplates) {
         await StorageService.saveTemplate(template);

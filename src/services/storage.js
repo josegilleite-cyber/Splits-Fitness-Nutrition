@@ -6,7 +6,8 @@ const KEYS = {
   NUTRITION: '@nutrition_data',
   PROGRESS: '@progress_data',
   SETTINGS: '@settings',
-  TEMPLATES_INITIALIZED: '@templates_initialized'
+  TEMPLATES_INITIALIZED: '@templates_initialized',
+  PERSONAL_RECORDS: '@personal_records'
 };
 
 export const StorageService = {
@@ -227,6 +228,57 @@ export const StorageService = {
     } catch (error) {
       console.error('Error loading exercise progress:', error);
       return [];
+    }
+  },
+
+  // Personal Records (PRs)
+  async getPersonalRecords() {
+    try {
+      const data = await AsyncStorage.getItem(KEYS.PERSONAL_RECORDS);
+      return data ? JSON.parse(data) : {};
+    } catch (error) {
+      console.error('Error loading personal records:', error);
+      return {};
+    }
+  },
+
+  async updatePersonalRecord(exerciseId, weight, reps, date) {
+    try {
+      const records = await this.getPersonalRecords();
+      
+      if (!records[exerciseId]) {
+        records[exerciseId] = {
+          maxWeight: { weight, reps, date },
+          maxVolume: { weight, reps, volume: weight * reps, date }
+        };
+      } else {
+        // Update max weight if this is heavier
+        if (weight > records[exerciseId].maxWeight.weight) {
+          records[exerciseId].maxWeight = { weight, reps, date };
+        }
+        
+        // Update max volume
+        const volume = weight * reps;
+        if (volume > records[exerciseId].maxVolume.volume) {
+          records[exerciseId].maxVolume = { weight, reps, volume, date };
+        }
+      }
+      
+      await AsyncStorage.setItem(KEYS.PERSONAL_RECORDS, JSON.stringify(records));
+      return records[exerciseId];
+    } catch (error) {
+      console.error('Error updating personal record:', error);
+      throw error;
+    }
+  },
+
+  async getPersonalRecordForExercise(exerciseId) {
+    try {
+      const records = await this.getPersonalRecords();
+      return records[exerciseId] || null;
+    } catch (error) {
+      console.error('Error loading personal record:', error);
+      return null;
     }
   }
 };
