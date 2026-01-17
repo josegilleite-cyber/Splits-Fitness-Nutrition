@@ -26,6 +26,8 @@
       "package": "com.splits.fitnessnutrition",
       "permissions": [
         "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.SCHEDULE_EXACT_ALARM",
         "android.permission.POST_NOTIFICATIONS"
       ]
     },
@@ -39,7 +41,18 @@
           "icon": "./assets/notification-icon.png",
           "color": "#ffffff"
         }
-      ]
-    ]
+      ],
+      "expo-asset",
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "38fd694f-8be1-4a0c-a513-8a9c0d5c8ed6"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/38fd694f-8be1-4a0c-a513-8a9c0d5c8ed6"
+    }
   }
 }
