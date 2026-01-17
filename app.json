@@ -29,9 +29,6 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.splits.fitnessnutrition",
-      "compileSdkVersion": 35,
-      "targetSdkVersion": 35,
-      "buildToolsVersion": "35.0.0",
       "permissions": [
         "android.permission.SCHEDULE_EXACT_ALARM",
         "android.permission.POST_NOTIFICATIONS"
@@ -59,8 +56,6 @@
         "projectId": "38fd694f-8be1-4a0c-a513-8a9c0d5c8ed6"
       }
     },
-    "privacy": "public",
-    "description": "Privacy-first workout and nutrition tracker. All data stored locally on device. No data collection, no cloud storage, no tracking. Perfect for serious athletes who value privacy.",
     "runtimeVersion": "1.0.0",
     "updates": {
       "url": "https://u.expo.dev/38fd694f-8be1-4a0c-a513-8a9c0d5c8ed6"
