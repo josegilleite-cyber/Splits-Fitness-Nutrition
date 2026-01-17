@@ -29,12 +29,6 @@ export default function RestTimer({ visible, onClose }) {
       interval = setInterval(() => {
         setTimeLeft((prev) => {
           const newTime = prev - 1;
-          // Animate progress
-          Animated.timing(progress, {
-            toValue: newTime / selectedTime,
-            duration: 1000,
-            useNativeDriver: false
-          }).start();
           
           if (newTime === 0) {
             setIsRunning(false);
@@ -45,6 +39,17 @@ export default function RestTimer({ visible, onClose }) {
     }
     return () => clearInterval(interval);
   }, [isRunning, timeLeft]);
+  
+  // Separate effect for progress animation
+  useEffect(() => {
+    if (isRunning) {
+      Animated.timing(progress, {
+        toValue: timeLeft / selectedTime,
+        duration: 1000,
+        useNativeDriver: false
+      }).start();
+    }
+  }, [timeLeft, isRunning]);
 
   const startTimer = async () => {
     setIsRunning(true);

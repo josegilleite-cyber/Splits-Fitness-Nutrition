@@ -84,12 +84,12 @@ export default function WorkoutsScreen() {
 
   const toggleSetComplete = (exerciseIndex, setIndex) => {
     const updated = { ...currentWorkout };
-    updated.exercises[exerciseIndex].sets[setIndex].completed = 
-      !updated.exercises[exerciseIndex].sets[setIndex].completed;
+    const exerciseSets = updated.exercises[exerciseIndex].sets;
+    exerciseSets[setIndex].completed = !exerciseSets[setIndex].completed;
     setCurrentWorkout(updated);
     
     // Show rest timer after completing a set
-    if (updated.exercises[exerciseIndex].sets[setIndex].completed) {
+    if (exerciseSets[setIndex].completed) {
       setShowRestTimer(true);
     }
   };

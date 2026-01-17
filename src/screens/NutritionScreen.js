@@ -214,7 +214,7 @@ export default function NutritionScreen() {
                 <View key={food.id} style={styles.foodItem}>
                   <Text style={styles.foodName}>{food.name}</Text>
                   <Text style={styles.foodDetails}>
-                    {food.serving}{food.servingUnit} • {Math.round(food.calories)} cal
+                    {food.serving} {food.servingUnit} • {Math.round(food.calories)} cal
                   </Text>
                   <Text style={styles.foodMacros}>
                     P: {Math.round(food.protein)}g • C: {Math.round(food.carbs)}g • F: {Math.round(food.fats)}g

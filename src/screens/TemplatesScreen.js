@@ -38,6 +38,11 @@ export default function TemplatesScreen() {
   };
 
   const initializeDefaultTemplates = async () => {
+    const alreadyInitialized = await StorageService.hasInitializedTemplates();
+    if (alreadyInitialized) {
+      return;
+    }
+
     const existing = await StorageService.getTemplates();
     if (existing.length === 0) {
       // Add some default templates
@@ -82,6 +87,7 @@ export default function TemplatesScreen() {
       for (const template of defaultTemplates) {
         await StorageService.saveTemplate(template);
       }
+      await StorageService.setTemplatesInitialized();
       loadTemplates();
     }
   };
