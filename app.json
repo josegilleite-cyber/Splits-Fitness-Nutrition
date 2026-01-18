@@ -29,6 +29,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.splits.fitnessnutrition",
+      "compileSdkVersion": 35,
       "targetSdkVersion": 35,
       "permissions": [
         "android.permission.SCHEDULE_EXACT_ALARM",
