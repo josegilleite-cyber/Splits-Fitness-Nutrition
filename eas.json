@@ -18,7 +18,8 @@
       "channel": "production",
       "android": {
         "buildType": "app-bundle",
-        "gradleCommand": ":app:bundleRelease"
+        "gradleCommand": ":app:bundleRelease",
+        "prebuildCommand": "bash ./scripts/copy-google-services.sh"
       }
     }
   },

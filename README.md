@@ -1,3 +1,32 @@
+# Integración automática de google-services.json (Android)
+
+Para builds locales y EAS Build, el archivo `google-services.json` debe estar en `config/` o en la raíz del proyecto. Antes de cada build de Android, el script `scripts/copy-google-services.sh` lo copiará automáticamente a `android/app/`.
+
+### Uso local
+
+1. Coloca tu `google-services.json` en `config/` o en la raíz del proyecto.
+2. Ejecuta:
+	 ```bash
+	 npm run prebuild:android && npm run android
+	 ```
+
+### Uso con EAS Build
+
+En `eas.json`, puedes usar el hook `prebuild` para ejecutar el script automáticamente:
+
+```json
+{
+	"build": {
+		"production": {
+			"android": {
+				"prebuildCommand": "bash ./scripts/copy-google-services.sh"
+			}
+		}
+	}
+}
+```
+
+También puedes subir el archivo como secret en EAS y descargarlo en un step previo si no quieres almacenarlo en el repo.
 # Splits Fitness & Nutrition
 
 🏋️ A comprehensive React Native fitness and nutrition tracking application built with Expo. Track your workouts, nutrition, and progress with complete privacy - all data is stored locally on your device.
