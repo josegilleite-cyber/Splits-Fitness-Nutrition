@@ -1,4 +1,17 @@
 # EEA Compliance Statement
+
+## Android Compatibility Update (2026)
+
+**Última actualización técnica: enero 2026**
+
+Para cumplir con los nuevos requisitos de Google Play y la normativa EEA:
+
+- La app ahora soporta visualización edge-to-edge en Android 15+ y iOS, manejando correctamente los insets del sistema mediante SafeAreaView en todas las pantallas principales.
+- Se eliminaron las restricciones de orientación fija y resizabilidad en AndroidManifest.xml, permitiendo soporte completo para tablets, dispositivos plegables y pantallas grandes (Android 16+).
+- No se utilizan APIs nativas obsoletas para edge-to-edge ni parámetros de ventana deprecados.
+- Todos los datos siguen almacenándose únicamente en el dispositivo, sin transmisión ni sincronización remota.
+
+Estos cambios aseguran la mejor experiencia de usuario y el cumplimiento con las políticas de privacidad y compatibilidad de Google Play/EEA.
 ## Splits Fitness & Nutrition
 
 **Last Updated**: January 17, 2026
