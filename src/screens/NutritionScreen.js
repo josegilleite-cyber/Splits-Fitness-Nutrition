@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { withSafeArea } from '../components/withSafeArea';
 import {
   View,
   Text,
@@ -13,7 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StorageService } from '../services/storage';
 import { generateId, formatDate } from '../utils/helpers';
 
-export default function NutritionScreen() {
+function NutritionScreen() {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [nutritionData, setNutritionData] = useState(null);
   const [showMealModal, setShowMealModal] = useState(false);
@@ -375,6 +376,8 @@ export default function NutritionScreen() {
     </View>
   );
 }
+
+export default withSafeArea(NutritionScreen);
 
 const styles = StyleSheet.create({
   container: {

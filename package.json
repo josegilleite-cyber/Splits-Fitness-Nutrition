@@ -1,7 +1,7 @@
 {
   "name": "splits-fitness-nutrition",
   "version": "1.0.0",
-  "description": "🏋️ Splits Fitness &amp; Nutrition - React Native workout tracker with privacy by design. Track exercises, sets, reps, progressive overload. Features: hypertrophy workout templates, exercise video tutorials, workout history, volume calculations. 100% local storage, zero data collection. Built with Expo, ready for App Store.",
+  "description": "🏋️ Splits Fitness & Nutrition - React Native workout tracker with privacy by design. Track exercises, sets, reps, progressive overload. Features: hypertrophy workout templates, exercise video tutorials, workout history, volume calculations. 100% local storage, zero data collection. Built with Expo, ready for App Store.",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -14,30 +14,33 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@react-native-async-storage/async-storage": "1.23.1",
-    "@react-navigation/bottom-tabs": "^7.10.0",
+    "@react-native-async-storage/async-storage": "2.1.2",
+    "@react-navigation/bottom-tabs": "^7.10.1",
     "@react-navigation/native": "^7.1.28",
-    "@react-navigation/native-stack": "^7.10.0",
-    "babel-preset-expo": "~12.0.0",
-    "expo": "~52.0.0",
-    "expo-asset": "~11.0.5",
-    "expo-av": "~15.0.2",
-    "expo-clipboard": "~7.0.1",
-    "expo-font": "~13.0.4",
-    "expo-linear-gradient": "~14.0.2",
-    "expo-notifications": "~0.29.14",
-    "expo-updates": "~0.27.4",
-    "react": "18.3.1",
-    "react-native": "0.76.9",
+    "@react-navigation/native-stack": "^7.10.1",
+    "babel-preset-expo": "~13.0.0",
+    "expo": "^53.0.0",
+    "expo-asset": "~11.1.7",
+    "expo-av": "~15.1.7",
+    "expo-build-properties": "~0.14.8",
+    "expo-clipboard": "~7.1.5",
+    "expo-font": "~13.3.2",
+    "expo-linear-gradient": "~14.1.5",
+    "expo-notifications": "~0.31.4",
+    "expo-updates": "~0.28.17",
+    "react": "19.0.0",
+    "react-native": "0.79.6",
     "react-native-chart-kit": "^6.12.0",
-    "react-native-safe-area-context": "4.12.0",
-    "react-native-screens": "~4.4.0",
-    "react-native-svg": "15.8.0"
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-screens": "~4.11.1",
+    "react-native-svg": "15.11.2"
   },
   "devDependencies": {
-    "@expo/config-plugins": "^54.0.4",
-    "@types/react": "~18.3.12",
-    "typescript": "^5.3.3"
+    "@babel/plugin-transform-class-properties": "^7.28.6",
+    "@babel/plugin-transform-private-methods": "^7.28.6",
+    "@babel/plugin-transform-private-property-in-object": "^7.28.6",
+    "@types/react": "~19.0.10",
+    "typescript": "~5.8.3"
   },
   "expo": {
     "doctor": {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { withSafeArea } from '../components/withSafeArea';
 import {
   View,
   Text,
@@ -10,7 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 
-export default function PremiumScreen() {
+function PremiumScreen() {
   const { theme } = useTheme();
   const [isPremium, setIsPremium] = useState(false);
   const styles = createStyles(theme);
@@ -114,6 +115,8 @@ export default function PremiumScreen() {
     </ScrollView>
   );
 }
+
+export default withSafeArea(PremiumScreen);
 
 const createStyles = (theme) => StyleSheet.create({
   container: { flex: 1, backgroundColor: theme.colors.background },

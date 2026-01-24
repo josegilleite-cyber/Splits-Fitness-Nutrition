@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { withSafeArea } from '../components/withSafeArea';
 import {
   View,
   Text,
@@ -19,7 +20,7 @@ import RestTimer from '../components/RestTimer';
 import ExerciseVideoModal from '../components/ExerciseVideoModal';
 import PlateCalculator from '../components/PlateCalculator';
 
-export default function WorkoutsScreen() {
+function WorkoutsScreen() {
   const { theme } = useTheme();
   const [workouts, setWorkouts] = useState([]);
   const [currentWorkout, setCurrentWorkout] = useState(null);
@@ -477,6 +478,8 @@ export default function WorkoutsScreen() {
     </View>
   );
 }
+
+export default withSafeArea(WorkoutsScreen);
 
 const createStyles = (theme) => StyleSheet.create({
   container: {

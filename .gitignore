@@ -11,6 +11,10 @@ npm-debug.*
 web-build/
 dist/
 
+# Ignorar carpetas nativas para Prebuild
+/android
+/ios
+
 # macOS
 .DS_Store
 

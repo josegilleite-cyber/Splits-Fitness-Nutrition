@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { withSafeArea } from '../components/withSafeArea';
 import {
   View,
   Text,
@@ -17,7 +18,7 @@ import { formatDate } from '../utils/helpers';
 
 const screenWidth = Dimensions.get('window').width;
 
-export default function ProgressScreen() {
+function ProgressScreen() {
   const [progressData, setProgressData] = useState([]);
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [exerciseProgress, setExerciseProgress] = useState([]);
@@ -263,6 +264,8 @@ export default function ProgressScreen() {
     </View>
   );
 }
+
+export default withSafeArea(ProgressScreen);
 
 const styles = StyleSheet.create({
   container: {

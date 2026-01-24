@@ -1,63 +1,60 @@
-# Splits Fitness & Nutrition - AI Coding Agent Instructions
 
-## Project Overview
-React Native fitness/nutrition tracker built with Expo (SDK ~52.0). Privacy-first architecture using 100% local storage (AsyncStorage). No backend, no API calls, no data collection. **Designed with Strong App-inspired UI** - minimal, clean, focused on functionality.
+# Splits Fitness & Nutrition — Guía para Agentes de IA
 
-**Key Dependencies**: `@react-navigation/bottom-tabs`, `expo-notifications`, `react-native-chart-kit`, `expo-clipboard`, `expo-av` (video)
+## Arquitectura General
+- **React Native + Expo** (SDK ~52): App móvil de fitness/nutrición, 100% local (sin backend, sin fetch/red).
+- **Persistencia**: Todo pasa por `src/services/storage.js` (`StorageService`) usando AsyncStorage.
+- **Navegación**: 6 pantallas principales en `src/navigation/AppNavigator.js` con `@react-navigation/bottom-tabs`.
+- **Temas**: Soporte dark/light mode en `src/context/ThemeContext.js` y estilos dinámicos con `createStyles(theme)`.
+- **Datos**: Ejercicios (`src/data/exercises.js`), plantillas (`src/data/workoutTemplates.js`), helpers (`src/utils/helpers.js`).
+- **Componentes clave**: `RestTimer`, `PlateCalculator`, `ExerciseVideoModal` (`src/components/`).
 
-## Architecture & Data Flow
+## Convenciones y Patrones Específicos
+- **Estilos**: Siempre usar función: `const styles = createStyles(theme);` y colores vía `theme.colors`.
+- **IDs**: Generar con `generateId()` de `utils/helpers.js`.
+- **Modales**: Controlados por estado local (`showModal`, `setShowModal`).
+- **Gestión de sets**: Arrays `{ id, reps, weight, completed }`, usar `id` como key en FlatList.
+- **Persistencia**: Actualizar estado local primero, luego persistir con `StorageService` (sin loading states).
+- **PRs**: Usar `StorageService.updatePersonalRecord()` tras cada set completado (solo alerta si supera récord anterior).
+- **Import/Export plantillas**: JSON, validación de estructura, deduplicación por `id`, soporte Share API y Clipboard.
+- **No fetch/red**: Nunca agregar lógica de backend o llamadas externas.
 
-### Theme System (`src/context/ThemeContext.js`)
-- **Dark/Light mode support**: ThemeProvider wraps entire app in `App.js`
-- **Usage pattern**: `const { theme, isDark, toggleTheme } = useTheme()` in any component
-- **Dynamic styles**: All screens use `createStyles(theme)` function pattern for theme-aware styling
-- **Colors**: Access via `theme.colors.background`, `theme.colors.primary`, etc.
-- **Persistence**: Theme preference saved to `@theme_preference` AsyncStorage key
+## Flujos Críticos
+- **Arranque**: `npm start` (Expo), `npm run android/ios/web` según plataforma.
+- **Build producción**: `eas build --platform android --profile production` (ver `eas.json`).
+- **Notificaciones**: Solo en dispositivo/emulador, permisos en `App.js`, canal Android en `utils/notifications.js`.
+- **Charts de progreso**: Datos de `@progress_data`, renderizados con `react-native-chart-kit` en `ProgressScreen.js`.
+- **Import/export plantillas**: Lógica en `TemplatesScreen.js` y `storage.js`.
 
-### Storage Layer (`src/services/storage.js`)
-- **Single source of truth**: All data operations go through `StorageService`
-- **Keys**: `@workouts`, `@workout_templates`, `@nutrition_data`, `@progress_data`, `@settings`, `@templates_initialized`, `@personal_records`
-- **Pattern**: Each method handles serialization/deserialization. Always wrap AsyncStorage calls in try/catch
-- **Progress entries**: Generated from workouts via `generateProgressEntry()` in `utils/helpers.js` and saved separately
-- **Personal Records (PRs)**: Tracked per exercise with `maxWeight` and `maxVolume` sub-objects
+## Ejemplos de Patrones
+- **Personal Records (PRs)**: `StorageService.updatePersonalRecord(exerciseId, weight, reps, date)` tras set completado. Solo alerta si supera récord anterior. Ver lógica en `src/services/storage.js` y uso en `WorkoutsScreen.js`.
+- **Plantillas**: Estructura mínima:
+  ```js
+  { id, name, description, exercises: [{ exerciseId, sets, reps }] }
+  ```
+  Import/export vía Share API o Clipboard. Deduplicación por `id`.
+- **Theme-aware**: Todos los componentes nuevos deben usar `useTheme()` y `createStyles(theme)`.
+- **Alternativas de ejercicio**: Sugeridas en `WorkoutsScreen.js` usando IDs válidos de `exercises.js`.
+- **Creación de progreso**: `generateProgressEntry(workout, exercise.exerciseId)` y guardar con `StorageService.saveProgressEntry()`.
 
-### Screen Architecture
-Bottom tab navigation (`@react-navigation/bottom-tabs`) with 6 main screens in `AppNavigator.js`:
-- **WorkoutsScreen**: Active workout creation + history list. Features Strong App-style set tracking with Previous/Reps/Weight columns, PR badges, plate calculator integration. Main state: `currentWorkout` (null when viewing history, object when active)
-- **TemplatesScreen**: Import/export via JSON + Clipboard API. Default templates initialized once on first load via `@templates_initialized` flag
-- **ProgressScreen**: Charts use `react-native-chart-kit` with Bezier line charts. Data aggregated from `@progress_data` AsyncStorage key
-- **NutritionScreen**: Daily meal logging with date navigation. Macros calculated client-side with progress bars for P/C/F
-- **PremiumScreen**: Demo premium features (non-functional purchase flow). Uses `isPremium` local state
-- **SettingsScreen**: Theme toggle, app preferences, data management (clear data, reset defaults)
+## Edge Cases y Errores Comunes
+- No crear referencias de ejercicios inexistentes en `alternatives`.
+- No duplicar plantillas por inicialización múltiple (`@templates_initialized`).
+- No eliminar datos de progreso al borrar workouts (histórico intencional).
+- URLs de video: solo enlaces directos de YouTube (no embeds).
+- PRs: Solo mostrar alerta si el nuevo peso supera el récord anterior.
 
-**Navigation pattern**: All tabs configured with theme-aware styles in `screenOptions`. Icons from `@expo/vector-icons/Ionicons` with filled/outline variants.
+## Archivos Clave
+- Navegación: `src/navigation/AppNavigator.js`
+- Almacenamiento: `src/services/storage.js`
+- Temas: `src/context/ThemeContext.js`
+- Ejercicios: `src/data/exercises.js`
+- Helpers: `src/utils/helpers.js`
+- Pantallas: `src/screens/`
+- Componentes: `src/components/`
 
-### Exercise Database (`src/data/exercises.js`)
-- Array of exercise objects with `alternatives` array containing IDs of similar exercises
-- Structure: `{ id, name, category, muscleGroups, equipment, videoUrl, thumbnailUrl, alternatives: [ids], isPremium }`
-- Alternative exercises linked via IDs - look up by `exercises.find(e => e.id === altId)`
-
-### Data Structures
-**Workout Object**:
-```javascript
-{
-  id: string,          // Generated via generateId()
-  name: string,        // User-defined workout name
-  date: string,        // ISO string: new Date().toISOString()
-  exercises: [{
-    id: string,
-    exerciseId: string,  // References exercises.js
-    sets: [{ id, reps, weight, completed: boolean }],
-    notes: string
-  }],
-  completed: boolean
-}
-```
-
-**Template Object** (`src/data/workoutTemplates.js`):
-```javascript
-{
-  id: string,
+---
+¿Falta algún flujo, convención o edge case importante? Indícalo para mejorar la guía.
   name: string,
   description: string,
   difficulty: 'Beginner'|'Intermediate'|'Advanced',
@@ -352,91 +349,115 @@ const suggestAlternative = (exerciseId) => {
    const existingTemplates = await this.getTemplates();
    
    // Deduplicate by ID
-   const existingIds = new Set(existingTemplates.map(t => t.id));
-   const uniqueNewTemplates = newTemplates.filter(t => !existingIds.has(t.id));
-   
-   // Merge and save
-   const merged = [...existingTemplates, ...uniqueNewTemplates];
-   await AsyncStorage.setItem(KEYS.TEMPLATES, JSON.stringify(merged));
-   ```
 
-4. **Validation**: Wrapped in try/catch - invalid JSON shows Alert error
-5. **Required fields**: `id`, `name`, `description`, `exercises[]` with `exerciseId`, `sets`, `reps`
+  # Splits Fitness & Nutrition — AI Coding Agent Guide
 
-**Template Schema**:
-```javascript
-{
-  id: "unique-id-12345",
-  name: "Push Day",
-  description: "Chest, shoulders, triceps",
-  difficulty: "Intermediate",    // Optional
-  duration: "60-75 min",          // Optional
-  frequency: "2x per week",       // Optional
-  isPremium: false,               // Optional
-  exercises: [
-    { exerciseId: "bench-press", sets: 4, reps: 8 },
-    { exerciseId: "overhead-press", sets: 3, reps: 10 }
-  ]
-}
-```
+  ## Arquitectura y Flujos Clave
+  - **React Native + Expo** (SDK ~52): App de fitness/nutrición, 100% local (AsyncStorage), sin backend ni llamadas de red.
+  - **Navegación**: 6 pantallas principales en `src/navigation/AppNavigator.js` usando `@react-navigation/bottom-tabs`.
+  - **Persistencia**: Toda la lógica de almacenamiento pasa por `src/services/storage.js` (`StorageService`).
+  - **Temas**: Sistema de dark/light mode en `src/context/ThemeContext.js`, con estilos dinámicos vía `createStyles(theme)`.
+  - **Datos**: Ejercicios en `src/data/exercises.js`, plantillas en `src/data/workoutTemplates.js`, helpers en `src/utils/helpers.js`.
+  - **Componentes clave**: `RestTimer`, `PlateCalculator`, `ExerciseVideoModal` (todos en `src/components/`).
 
-**Cross-platform compatibility**:
-- Share API works on iOS/Android (native share sheet)
-- Clipboard works everywhere including web
-- JSON format platform-agnostic
+  ## Convenciones Específicas
+  - **Estilos**: Siempre usar patrón función: `const styles = createStyles(theme);` y acceder a colores vía `theme.colors`.
+  - **IDs**: Generar con `generateId()` de `utils/helpers.js`.
+  - **Modales**: Controlados por estado local (`showModal`, `setShowModal`).
+  - **Gestión de sets**: Arrays de `{ id, reps, weight, completed }`, usar `id` como key en FlatList.
+  - **Persistencia**: Actualizar estado local primero, luego persistir con `StorageService` (no loading states).
+  - **PRs**: Actualizar con `StorageService.updatePersonalRecord()` tras cada set completado.
+  - **Import/Export plantillas**: JSON, validación de estructura, soporte Share API y Clipboard.
+  - **No fetch/red**: Nunca agregar lógica de backend o llamadas externas.
 
-### Building for Google Play Console
-**Key files**: `eas.json`, `app.json`, `docs/google-play-listing.md`
+  ## Flujos Críticos de Desarrollo
+  - **Arranque**: `npm start` (Expo), `npm run android/ios/web` según plataforma.
+  - **Build producción**: `eas build --platform android --profile production` (ver `eas.json`).
+  - **Notificaciones**: Solo en dispositivo/emulador, permisos en `App.js`, canal Android en `utils/notifications.js`.
+  - **Charts de progreso**: Datos de `@progress_data`, renderizados con `react-native-chart-kit` en `ProgressScreen.js`.
+  - **Import/export plantillas**: Ver lógica en `TemplatesScreen.js` y `storage.js`.
 
-**Build Process**:
-1. **EAS Build** generates Android App Bundle (.aab file):
-   ```bash
-   eas build --platform android --profile production
-   ```
-   - Profile `production` has `autoIncrement: true` - auto-bumps version number
-   - Generates `.aab` file compatible with Google Play
-   - Required API level: 35 (targetSdkVersion in build)
+  ## Ejemplos de Patrones
+  ## Lógica de Personal Records (PRs)
+  - Los PRs (Personal Records) se actualizan automáticamente tras completar un set en WorkoutsScreen.
+  - Usa `StorageService.updatePersonalRecord(exerciseId, weight, reps, date)` para comparar y guardar nuevos récords de peso o volumen.
+  - Solo muestra alerta de PR si el nuevo valor supera el anterior (no en cada set).
+  - Estructura de PR:
+    ```js
+    {
+      [exerciseId]: {
+        maxWeight: { weight, reps, date },
+        maxVolume: { volume, date }
+      }
+    }
+    ```
+  - Ver lógica en `src/services/storage.js` y uso en `WorkoutsScreen.js`.
 
-2. **Download .aab**: After build completes, download from Expo dashboard or via CLI
+  ## Manejo de Plantillas
+  - Las plantillas de entrenamiento se almacenan y gestionan vía `StorageService` (`@workout_templates`).
+  - Import/export:
+    - Exporta usando Share API (`Share.share`) o Clipboard (`Clipboard.setStringAsync`).
+    - Importa pegando JSON en el modal de TemplatesScreen; valida estructura antes de guardar.
+    - Deduplicación por `id` al importar (no sobrescribe existentes).
+  - Estructura mínima:
+    ```js
+    {
+      id: '...',
+      name: '...',
+      description: '...',
+      exercises: [{ exerciseId, sets, reps }]
+    }
+    ```
+  - Ver detalles en `src/screens/TemplatesScreen.js` y `src/services/storage.js`.
 
-3. **Upload to Google Play Console**:
-   - Navigate to Production track > Create new release
-   - Upload `.aab` file (NOT .apk)
-   - Google Play signs with app signing key
+  ## Integración de Componentes
+  - Todos los componentes nuevos deben ser theme-aware usando `useTheme()` y el patrón `createStyles(theme)`.
+  - Ejemplo de integración:
+    ```js
+    import { useTheme } from '../context/ThemeContext';
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
+    ```
+  - Componentes clave:
+    - `RestTimer`: Modal de cuenta regresiva, notifica al usuario tras completar sets.
+    - `PlateCalculator`: Calculadora de discos, retorna peso seleccionado al padre vía callback.
+    - `ExerciseVideoModal`: Reproduce videos de YouTube, requiere `videoUrl` directo.
+  - Todos los componentes están en `src/components/` y deben seguir el patrón de modales controlados por estado local.
+  - **Alternativas de ejercicio**:
+    ```js
+    // Sugerir alternativas en WorkoutsScreen.js
+    const suggestAlternative = (exerciseId) => {
+      const exercise = exercises.find(e => e.id === exerciseId);
+      if (exercise?.alternatives?.length) {
+        const altNames = exercise.alternatives
+          .map(altId => exercises.find(e => e.id === altId)?.name)
+          .filter(Boolean).join('\n');
+        Alert.alert('Exercise Alternatives', `Alternative exercises for ${exercise.name}:\n\n${altNames}`);
+      }
+    };
+    ```
+  - **Creación de entrada de progreso**:
+    ```js
+    const progressEntry = generateProgressEntry(workout, exercise.exerciseId);
+    await StorageService.saveProgressEntry(progressEntry);
+    ```
 
-**Critical Data Safety Declaration**:
-- Google requires "Data Safety" form completion
-- **This app collects ZERO data** - all storage is local AsyncStorage
-- Form answers:
-  - "Does your app collect or share user data?" → **No**
-  - No analytics, no backend, no third-party SDKs with tracking
-  - Privacy policy URL still required (hosted at domain or GitHub Pages)
-- **EEA Compliance**: See `docs/eea-compliance.md` for full GDPR compliance documentation
-- **iOS Privacy Labels**: Configured in app.json infoPlist with clear "no tracking" statements
+  ## Errores y Edge Cases
+  - No crear referencias de ejercicios inexistentes en `alternatives`.
+  - No duplicar plantillas por inicialización múltiple (`@templates_initialized`).
+  - No eliminar datos de progreso al borrar workouts (histórico intencional).
+  - URLs de video: solo enlaces directos de YouTube (no embeds).
+  - PRs: Solo mostrar alerta si el nuevo peso supera el récord anterior.
 
-**Store Listing Requirements** (from `google-play-listing.md`):
-- App icon: 512×512 PNG with transparency
-- Feature graphic: 1024×500 JPEG/PNG (banner image)
-- Screenshots: Minimum 2, recommended 4-8 (phone screenshots from real device)
-- Short description: ≤80 characters
-- Full description: ≤4000 characters
-- Contact email: Real support email address
-- Privacy policy URL: Must be publicly hosted before submission
+  ## Archivos Clave
+  - Navegación: `src/navigation/AppNavigator.js`
+  - Almacenamiento: `src/services/storage.js`
+  - Temas: `src/context/ThemeContext.js`
+  - Ejercicios: `src/data/exercises.js`
+  - Helpers: `src/utils/helpers.js`
+  - Pantallas: `src/screens/`
+  - Componentes: `src/components/`
 
-**Release Process**:
+  ---
+  ¿Falta algún flujo, convención o edge case importante? Indícalo para mejorar la guía.
 1. Complete store listing content
-2. Build .aab with `eas build`
-3. Upload to Production track
-4. Complete Content Rating questionnaire
-5. Complete Data Safety form (declare no data collection)
-6. Submit for review (1-7 days typically)
-
-**Note**: No separate .aab signing needed - EAS Build + Google Play signing handles this automatically
-
-## Project-Specific Edge Cases
-- **PremiumScreen**: Demo-only purchase flow with local `isPremium` state toggle - no actual payment processing
-- **Template sharing**: Uses React Native Share API + Clipboard - both methods must be supported for cross-platform compatibility
-- **Workout state**: `currentWorkout` is null when viewing history, object when active session in progress
-- **Exercise video player**: Requires expo-av VideoPlayer, not WebView or YouTube iframe
-- **Progress data**: Generated from completed workouts, not entered directly - calculated via helper functions
-- **Notification channel**: Android-specific requirement, iOS uses system-level notification settings

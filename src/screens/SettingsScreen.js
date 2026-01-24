@@ -1,4 +1,5 @@
 import React from 'react';
+import { withSafeArea } from '../components/withSafeArea';
 import {
   View,
   Text,
@@ -10,7 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 
-export default function SettingsScreen() {
+function SettingsScreen() {
   const { theme, isDark, toggleTheme } = useTheme();
   const styles = createStyles(theme);
 
@@ -134,6 +135,8 @@ export default function SettingsScreen() {
     </ScrollView>
   );
 }
+
+export default withSafeArea(SettingsScreen);
 
 const createStyles = (theme) => StyleSheet.create({
   container: {

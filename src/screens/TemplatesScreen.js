@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { withSafeArea } from '../components/withSafeArea';
 import {
   View,
   Text,
@@ -18,7 +19,7 @@ import { exercises } from '../data/exercises';
 import { workoutTemplates } from '../data/workoutTemplates';
 import { generateId } from '../utils/helpers';
 
-export default function TemplatesScreen() {
+function TemplatesScreen() {
   const [templates, setTemplates] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showExerciseSelector, setShowExerciseSelector] = useState(false);
@@ -418,6 +419,8 @@ export default function TemplatesScreen() {
     </View>
   );
 }
+
+export default withSafeArea(TemplatesScreen);
 
 const styles = StyleSheet.create({
   container: {

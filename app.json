@@ -41,7 +41,6 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "./app.plugin.js",
       [
         "expo-notifications",
         {
@@ -50,16 +49,25 @@
         }
       ],
       "expo-asset",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "2.2.0"
+          }
+        }
+      ],
     ],
+    "owner": "kalimators-organization",
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/38fd694f-8be1-4a0c-a513-8a9c0d5c8ed6"
+    },
     "extra": {
       "eas": {
         "projectId": "38fd694f-8be1-4a0c-a513-8a9c0d5c8ed6"
       }
-    },
-    "runtimeVersion": "1.0.0",
-    "updates": {
-      "url": "https://u.expo.dev/38fd694f-8be1-4a0c-a513-8a9c0d5c8ed6"
     }
   }
 }
